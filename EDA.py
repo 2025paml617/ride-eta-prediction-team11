@@ -19,3 +19,4 @@ df.info()
 
 # Display descriptive statistics
 display(df.describe(include='all'))
+
