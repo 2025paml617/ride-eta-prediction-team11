@@ -112,6 +112,29 @@ def haversine(lat1, lon1, lat2, lon2):
     return R * c
 
 
+def remove_iqr_outliers(dataframe, column, multiplier=1.5):
+    """Remove rows with values outside Q1 - 1.5*IQR and Q3 + 1.5*IQR."""
+    if column not in dataframe.columns:
+        return dataframe
+
+    q1 = dataframe[column].quantile(0.25)
+    q3 = dataframe[column].quantile(0.75)
+    iqr = q3 - q1
+
+    lower = q1 - multiplier * iqr
+    upper = q3 + multiplier * iqr
+
+    before = len(dataframe)
+    dataframe = dataframe[dataframe[column].between(lower, upper)].copy()
+
+    print(
+        f"{column}: removed {before - len(dataframe):,} outliers "
+        f"(valid range: {lower:.4f} to {upper:.4f})"
+    )
+
+    return dataframe
+
+
 df["distance_km"] = df.apply(
     lambda row: haversine(
         row["pickup_latitude"],
@@ -144,6 +167,23 @@ for col in possible_targets:
     if col in df.columns:
         target_column = col
         break
+
+# ============================================================
+# Identify and Handle Outliers
+# ============================================================
+
+print("\nIdentifying and handling outliers...")
+
+before_outliers = len(df)
+for outlier_column in ["distance_km", "passenger_count"]:
+    df = remove_iqr_outliers(df, outlier_column)
+
+if target_column:
+    df = remove_iqr_outliers(df, target_column)
+
+print(
+    f"Total rows removed by outlier filtering: {before_outliers - len(df):,}"
+)
 
 if target_column:
     y = df[target_column]
