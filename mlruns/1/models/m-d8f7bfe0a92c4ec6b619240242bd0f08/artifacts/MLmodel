@@ -1,0 +1,22 @@
+artifact_path: file:C:/Workspaces/ml-eta/ride-eta-prediction-team11/mlruns/1/models/m-d8f7bfe0a92c4ec6b619240242bd0f08/artifacts
+flavors:
+  python_function:
+    data: model.ubj
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.xgboost
+    python_version: 3.12.10
+  xgboost:
+    code: null
+    data: model.ubj
+    model_class: xgboost.sklearn.XGBRegressor
+    model_format: ubj
+    xgb_version: 3.4.1
+mlflow_version: 3.15.1
+model_id: m-d8f7bfe0a92c4ec6b619240242bd0f08
+model_size_bytes: 855297
+model_uuid: m-d8f7bfe0a92c4ec6b619240242bd0f08
+prompts: null
+run_id: 448c7dd451924ffd8984ee202df097b5
+utc_time_created: '2026-08-18 13:08:31.568336'
