@@ -1,0 +1,23 @@
+artifact_path: file:C:/Workspaces/ml-eta/ride-eta-prediction-team11/mlruns/1/models/m-29a38e8b3f024376a6ced6408702c9b1/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.skops
+    predict_fn: predict
+    python_version: 3.12.10
+  sklearn:
+    code: null
+    pickled_model: model.skops
+    serialization_format: skops
+    sklearn_version: 1.9.0
+    skops_trusted_types: null
+mlflow_version: 3.15.1
+model_id: m-29a38e8b3f024376a6ced6408702c9b1
+model_size_bytes: 9716
+model_uuid: m-29a38e8b3f024376a6ced6408702c9b1
+prompts: null
+run_id: f09b9fbfa65b4f79ba203b9947f7c56c
+utc_time_created: '2026-08-18 05:34:11.287193'
