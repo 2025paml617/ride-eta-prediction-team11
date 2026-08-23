@@ -62,8 +62,94 @@ python EDA/eda_nyc_taxi.py
 ## Data preprocessing 
 python preprocessing/preprocessing.py
 
-## model training
-python models/NYC_Model_Training_MLflow.py
+1. Feature Store
+
+python features/build_features.py → creates/updates feature_store.db
+
+NYC_Preprocessed.csv
+        ↓
+build_features.py
+        ↓
+feature_store.db
+2. Model Training
+
+model_train_from_feature_store.py reads only from feature_store.db.
+
+feature_store.db
+        ↓
+model_train_from_feature_store.py
+        ↓
+Linear Regression
+Random Forest
+XGBoost
+        ↓
+Hyperparameter tuning
+        ↓
+Model comparison
+        ↓
+Best model
+3. MLflow — completely separate
+
+Download mlflow_tracking.py
+
+The MLflow script runs after model training and reads the generated model results:
+
+model_train_from_feature_store.py
+              ↓
+     model_comparison.csv
+     feature_importance.csv
+     top_1000_prediction_errors.csv
+     best_model.pkl
+              ↓
+       mlflow_tracking.py
+              ↓
+          MLflow
+
+It logs:
+
+Linear Regression metrics
+Random Forest metrics
+XGBoost metrics
+Tuned XGBoost metrics
+MAE
+RMSE
+R²
+Selected best model
+Best model artifact
+Feature importance
+Error-analysis results
+Execution order
+
+Install MLflow if required:
+
+pip install mlflow
+
+Then:
+
+Step 1 — Build feature store
+
+python features/build_features.py
+
+step 2 - create a mlflow model tracker
+
+python models/mlflow_tracker.py
+
+Step 2 — Train models
+
+python models/train_linear_regression.py
+python models/train_advanced_models.py
+
+Step 3 — Track experiments
+
+python mlflow_tracking.py
+
+Step 4 — Open MLflow UI
+
+mlflow ui
+
+Then open the local MLflow address shown in the terminal.
+
+This separation is cleaner for your MLOps project because feature engineering, model training, and experiment tracking are now three independent components.
 
 
 ## License
