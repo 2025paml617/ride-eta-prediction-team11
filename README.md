@@ -50,6 +50,22 @@ python evaluate_model.py --model model.pkl --data test.csv
 - Add your own scripts, notebooks, and model artifacts as needed.
 - Ensure reproducibility by tracking preprocessing steps and model hyperparameters.
 
+## intall python evnvironment
+python -m venv venv
+
+## Actiate the environment
+venv\Scripts\Activate.bat
+
+## To perform the Exploratory data analysis run the below script
+python EDA/eda_nyc_taxi.py
+
+## Data preprocessing 
+python preprocessing/preprocessing.py
+
+## model training
+python models/NYC_Model_Training_MLflow.py
+
+
 ## License
 
 This project is provided under the terms of the included `LICENSE` file.
