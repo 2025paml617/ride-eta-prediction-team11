@@ -1,0 +1,51 @@
+{
+  "rows_read": 5,
+  "rows_kept": 5,
+  "rows_rejected": 0,
+  "reject_rate": 0.0,
+  "reject_counts": {
+    "MISSING_REQUIRED_FIELD": 0,
+    "INVALID_NUMERIC": 0,
+    "INVALID_TIMESTAMP": 0,
+    "TIMESTAMP_OUT_OF_RANGE": 0,
+    "NON_POSITIVE_DURATION": 0,
+    "DURATION_MISMATCH": 0,
+    "DURATION_OUT_OF_RANGE": 0,
+    "MISSING_GPS": 0,
+    "GPS_OUT_OF_BOUNDS": 0,
+    "IMPLAUSIBLE_SPEED": 0,
+    "DUPLICATE_ID": 0
+  },
+  "reject_share_of_rejected": {
+    "MISSING_REQUIRED_FIELD": 0.0,
+    "INVALID_NUMERIC": 0.0,
+    "INVALID_TIMESTAMP": 0.0,
+    "TIMESTAMP_OUT_OF_RANGE": 0.0,
+    "NON_POSITIVE_DURATION": 0.0,
+    "DURATION_MISMATCH": 0.0,
+    "DURATION_OUT_OF_RANGE": 0.0,
+    "MISSING_GPS": 0.0,
+    "GPS_OUT_OF_BOUNDS": 0.0,
+    "IMPLAUSIBLE_SPEED": 0.0,
+    "DUPLICATE_ID": 0.0
+  },
+  "flag_counts": {
+    "ZERO_PASSENGERS": 0,
+    "HIGH_PASSENGERS": 0,
+    "ZERO_DISTANCE": 0,
+    "STORE_AND_FWD": 0
+  },
+  "raw_null_counts": {
+    "dropoff_datetime": 0,
+    "dropoff_latitude": 0,
+    "dropoff_longitude": 0,
+    "id": 0,
+    "passenger_count": 0,
+    "pickup_datetime": 0,
+    "pickup_latitude": 0,
+    "pickup_longitude": 0,
+    "store_and_fwd_flag": 0,
+    "trip_duration": 0,
+    "vendor_id": 0
+  }
+}

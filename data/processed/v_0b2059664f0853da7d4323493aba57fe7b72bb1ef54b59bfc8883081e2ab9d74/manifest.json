@@ -1,0 +1,92 @@
+{
+  "version": "0b2059664f0853da7d4323493aba57fe7b72bb1ef54b59bfc8883081e2ab9d74",
+  "timestamp": "2026-08-22T21:34:52Z",
+  "elapsed_seconds": 1.47,
+  "config": {
+    "source_path": "C:\\Users\\amgka\\workspace\\Bits\\ml-engg-ride-eta-prediction\\NYC Taxi Trip Duration.zip",
+    "csv_member": "NYC.csv",
+    "output_root": "C:\\Users\\amgka\\workspace\\Bits\\ml-engg-ride-eta-prediction\\data\\processed",
+    "external_dir": "C:\\Users\\amgka\\workspace\\Bits\\ml-engg-ride-eta-prediction\\data\\external",
+    "chunksize": 200000,
+    "sample_rows": 10000,
+    "min_longitude": -74.5,
+    "max_longitude": -73.5,
+    "min_latitude": 40.3,
+    "max_latitude": 41.1,
+    "null_island_tolerance_deg": 0.01,
+    "min_pickup_date": "2016-01-01",
+    "max_pickup_date": "2017-01-01",
+    "min_duration_s": 10,
+    "max_duration_s": 21600,
+    "duration_mismatch_tolerance_s": 1,
+    "max_avg_speed_kmh": 150.0,
+    "max_passenger_count": 8,
+    "zone_precision": 3,
+    "rush_hour_morning": [
+      7,
+      10
+    ],
+    "rush_hour_evening": [
+      16,
+      20
+    ],
+    "night_start_hour": 22,
+    "night_end_hour": 5,
+    "weather_mode": "fetch",
+    "weather_csv": null,
+    "weather_latitude": 40.7128,
+    "weather_longitude": -74.006,
+    "force": false
+  },
+  "report": {
+    "rows_read": 10000,
+    "rows_kept": 9968,
+    "rows_rejected": 32,
+    "reject_rate": 0.0032,
+    "reject_counts": {
+      "MISSING_REQUIRED_FIELD": 0,
+      "INVALID_NUMERIC": 0,
+      "INVALID_TIMESTAMP": 0,
+      "TIMESTAMP_OUT_OF_RANGE": 0,
+      "NON_POSITIVE_DURATION": 0,
+      "DURATION_MISMATCH": 0,
+      "DURATION_OUT_OF_RANGE": 32,
+      "MISSING_GPS": 0,
+      "GPS_OUT_OF_BOUNDS": 0,
+      "IMPLAUSIBLE_SPEED": 1,
+      "DUPLICATE_ID": 0
+    },
+    "reject_share_of_rejected": {
+      "MISSING_REQUIRED_FIELD": 0.0,
+      "INVALID_NUMERIC": 0.0,
+      "INVALID_TIMESTAMP": 0.0,
+      "TIMESTAMP_OUT_OF_RANGE": 0.0,
+      "NON_POSITIVE_DURATION": 0.0,
+      "DURATION_MISMATCH": 0.0,
+      "DURATION_OUT_OF_RANGE": 1.0,
+      "MISSING_GPS": 0.0,
+      "GPS_OUT_OF_BOUNDS": 0.0,
+      "IMPLAUSIBLE_SPEED": 0.03125,
+      "DUPLICATE_ID": 0.0
+    },
+    "flag_counts": {
+      "ZERO_PASSENGERS": 0,
+      "HIGH_PASSENGERS": 0,
+      "ZERO_DISTANCE": 31,
+      "STORE_AND_FWD": 61
+    },
+    "raw_null_counts": {
+      "dropoff_datetime": 0,
+      "dropoff_latitude": 0,
+      "dropoff_longitude": 0,
+      "id": 0,
+      "passenger_count": 0,
+      "pickup_datetime": 0,
+      "pickup_latitude": 0,
+      "pickup_longitude": 0,
+      "store_and_fwd_flag": 0,
+      "trip_duration": 0,
+      "vendor_id": 0
+    }
+  }
+}

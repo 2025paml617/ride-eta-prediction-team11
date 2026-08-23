@@ -1,0 +1,23 @@
+artifact_path: file:C:/Users/amgka/workspace/Bits/ml-engg-ride-eta-prediction/mlruns/1/models/m-fcaceeb478074e5783820883714382c0/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.14
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: pickle
+    sklearn_version: 1.9.0
+    skops_trusted_types: null
+mlflow_version: 3.15.1
+model_id: m-fcaceeb478074e5783820883714382c0
+model_size_bytes: 386531
+model_uuid: m-fcaceeb478074e5783820883714382c0
+prompts: null
+run_id: ed6f25339e44406b849a17bdc618026a
+utc_time_created: '2026-08-23 09:15:43.059133'

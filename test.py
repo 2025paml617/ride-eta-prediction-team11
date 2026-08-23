@@ -1,0 +1,1 @@
+Ingest historical trip data; validate schema (missing GPS pings, invalid timestamps); engineer features (hour-of-day, weekday/weekend, distance, weather); version the dataset.a
