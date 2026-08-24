@@ -1,0 +1,10 @@
+.git
+.dvc
+__pycache__
+*.pyc
+data/
+feature_store/
+mlruns/
+*.db
+*.csv
+!best_model.pkl

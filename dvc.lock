@@ -1,0 +1,130 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python preprocessing/preprocessing.py
+    deps:
+    - path: data/raw/NYC.csv
+      hash: md5
+      md5: e59c291a4b1c640f1dab33b89daa22e1
+      size: 200589097
+    - path: preprocessing/preprocessing.py
+      hash: md5
+      md5: 4955589ed94fc4307fc24f5abb99e8cd
+      size: 7998
+    outs:
+    - path: data/processed/NYC_Preprocessed.csv
+      hash: md5
+      md5: 06cfe66995c75afad9cd03817ac21337
+      size: 204058985
+  feature_store:
+    cmd: python features/build_features.py
+    deps:
+    - path: data/processed/NYC_Preprocessed.csv
+      hash: md5
+      md5: 06cfe66995c75afad9cd03817ac21337
+      size: 204058985
+    - path: features/build_features.py
+      hash: md5
+      md5: 717cdfd48b96f200e1ac1980e163a25f
+      size: 5423
+    outs:
+    - path: feature_store/feature_store.db
+      hash: md5
+      md5: 5a79586482de4d11c2507429a616373e
+      size: 126279680
+  train_linear:
+    cmd: python models/train_linear_regression.py
+    deps:
+    - path: feature_store/feature_store.db
+      hash: md5
+      md5: 5a79586482de4d11c2507429a616373e
+      size: 126279680
+    - path: models/mlflow_tracker.py
+      hash: md5
+      md5: 00a402d3c98ab4fa9b35acc25d669307
+      size: 2615
+    - path: models/train_linear_regression.py
+      hash: md5
+      md5: 07676f259814383e11a1a69862671287
+      size: 3728
+    outs:
+    - path: linear_regression.pkl
+      hash: md5
+      md5: 241ecfec7ead79d2e9d2060812c21d32
+      size: 32771388
+    - path: linear_regression_model.pkl
+      hash: md5
+      md5: a373109cb21cb3e5ed102c0d12fd1551
+      size: 1303
+  train_advanced:
+    cmd: python models/train_advanced_models.py
+    deps:
+    - path: feature_store/feature_store.db
+      hash: md5
+      md5: 5a79586482de4d11c2507429a616373e
+      size: 126279680
+    - path: models/train_advanced_models.py
+      hash: md5
+      md5: 1b81ef252da2470823191eec8c7e87d4
+      size: 6909
+    outs:
+    - path: random_forest.pkl
+      hash: md5
+      md5: 8457d1d1a21eee4e12e1b714fa8b999d
+      size: 2063415162
+    - path: tuned_xgboost.pkl
+      hash: md5
+      md5: 6eaa6de35e80c74506ddaa7195e5f08a
+      size: 3386670
+    - path: xgboost.pkl
+      hash: md5
+      md5: 9d47376d9098d20b0fc65d30452e3425
+      size: 6066206
+    - path: xgboost_tuning_search.pkl
+      hash: md5
+      md5: 4db86e25b97b7b07dd35eaa5e7a1a988
+      size: 2418560
+  select_model:
+    cmd: python models/evaluate_and_select_best.py
+    deps:
+    - path: linear_regression.pkl
+      hash: md5
+      md5: 241ecfec7ead79d2e9d2060812c21d32
+      size: 32771388
+    - path: models/evaluate_and_select_best.py
+      hash: md5
+      md5: c0fb6d44c2a72cd7ea9f4209e3e42ebb
+      size: 3992
+    - path: models/mlflow_tracker.py
+      hash: md5
+      md5: 00a402d3c98ab4fa9b35acc25d669307
+      size: 2615
+    - path: random_forest.pkl
+      hash: md5
+      md5: 8457d1d1a21eee4e12e1b714fa8b999d
+      size: 2063415162
+    - path: tuned_xgboost.pkl
+      hash: md5
+      md5: 6eaa6de35e80c74506ddaa7195e5f08a
+      size: 3386670
+    - path: xgboost.pkl
+      hash: md5
+      md5: 9d47376d9098d20b0fc65d30452e3425
+      size: 6066206
+    outs:
+    - path: best_model.pkl
+      hash: md5
+      md5: feb9f4749736927144dbb4a85be2d7fb
+      size: 5155640
+    - path: feature_importance.csv
+      hash: md5
+      md5: 6d30f225d50a8dd85b559c7286b8c0d7
+      size: 401
+    - path: model_comparison.csv
+      hash: md5
+      md5: e1fe0b94ba9f8117bcf2cc91bec2ffe2
+      size: 303
+    - path: top_1000_prediction_errors.csv
+      hash: md5
+      md5: a981174390f290cbdb1054e08aa9862e
+      size: 223761
