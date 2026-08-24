@@ -50,11 +50,42 @@ python evaluate_model.py --model model.pkl --data test.csv
 - Add your own scripts, notebooks, and model artifacts as needed.
 - Ensure reproducibility by tracking preprocessing steps and model hyperparameters.
 
-## intall python evnvironment
-python -m venv venv
+## Installation and execution
 
-## Actiate the environment
-venv\Scripts\Activate.bat
+Create and activate a virtual environment, then install the dependencies:
+
+```bash
+python -m venv venv
+venv\\Scripts\\activate
+pip install -r requirements.txt
+```
+
+Run the pipeline in this order:
+
+```bash
+python features/build_features.py
+python models/train_linear_regression.py
+python models/train_advanced_models.py
+python models/evaluate_and_select_best.py
+```
+
+The evaluation step writes `model_comparison.csv`, `feature_importance.csv`,
+`top_1000_prediction_errors.csv`, and `best_model.pkl`.
+
+## Logging
+
+The feature-store, training, evaluation, and MLflow tracking scripts use the
+standard Python logger. Messages are emitted at `INFO` level by default and
+include timestamps, severity, module name, and message. Unexpected pipeline
+failures are logged at `ERROR` level with a traceback before being re-raised.
+
+To see more or less detail, configure logging before importing a script, or
+change `level=logging.INFO` to `logging.DEBUG` or `logging.WARNING` in the
+script entry point.
+
+XGBoost models are logged with MLflow's XGBoost flavor. This is required for
+`XGBRegressor` artifacts and avoids sklearn trusted-type errors during model
+serialization.
 
 ## To perform the Exploratory data analysis run the below script
 python EDA/eda_nyc_taxi.py

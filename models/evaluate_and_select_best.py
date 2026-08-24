@@ -4,10 +4,13 @@ importance, performs error analysis, and exports the top-performing model as bes
 """
 
 from pathlib import Path
+import logging
 import joblib
 import pandas as pd
 
 from mlflow_tracker import MLflowTracker
+
+logger = logging.getLogger(__name__)
 
 FEATURE_COLUMNS = [
     "num__passenger_count",
@@ -27,6 +30,7 @@ FEATURE_COLUMNS = [
 
 def load_pickle(path):
     if not Path(path).exists():
+        logger.error("Required model artifact not found: %s", path)
         raise FileNotFoundError(
             f"Required file '{path}' not found. Run previous training scripts first."
         )
@@ -35,6 +39,7 @@ def load_pickle(path):
 
 def main():
     tracker = MLflowTracker()
+    logger.info("Starting model evaluation and selection")
     print("--- Performance Evaluation & Model Selection ---")
 
     # Load artifacts and baseline dataset reference
@@ -52,6 +57,7 @@ def main():
 
     comparison = pd.DataFrame(results).sort_values("RMSE")
     comparison.to_csv("model_comparison.csv", index=False)
+    logger.info("Compared %d models and saved model_comparison.csv", len(all_runs))
 
     print("\nModel Comparison Table:")
     print(comparison.to_string(index=False))
@@ -62,6 +68,7 @@ def main():
     best_name = best_run["name"]
 
     joblib.dump(best_model, "best_model.pkl")
+    logger.info("Selected '%s' using lowest RMSE and saved best_model.pkl", best_name)
 
     print(f"\nSelected Best Model: {best_name}")
     print("Selection Criterion: Lowest Test RMSE")
@@ -70,7 +77,9 @@ def main():
     tracker.log_summary_run(
         run_name="Model_Selection_Summary",
         best_model_name=best_name,
-        best_metrics=best_run,
+        # MLflow metrics must be numeric scalars. ``best_run`` also contains
+        # the fitted estimator and prediction array, so pass only its metrics.
+        best_metrics=best_run["metrics"],
         best_model=best_model,
         artifacts=best_run.get("artifacts", []),
     )
@@ -106,4 +115,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception:
+        logger.exception("Model evaluation and selection failed")
+        raise

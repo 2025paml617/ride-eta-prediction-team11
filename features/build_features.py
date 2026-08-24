@@ -19,8 +19,15 @@ Run:
 
 from pathlib import Path
 import sqlite3
+import logging
 import pandas as pd
 
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = PROJECT_ROOT / "data" / "processed" / "NYC_Preprocessed.csv"
@@ -49,6 +56,7 @@ CHUNK_SIZE = 50_000
 def create_database():
     """Create the feature-store tables."""
     if DB_PATH.exists():
+        logger.info("Replacing existing feature store: %s", DB_PATH)
         DB_PATH.unlink()
 
     conn = sqlite3.connect(DB_PATH)
@@ -105,6 +113,7 @@ def create_database():
 def build_feature_store():
     """Read the preprocessed data and populate SQLite."""
     if not DATA_PATH.exists():
+        logger.error("Input data file not found: %s", DATA_PATH)
         raise FileNotFoundError(
             f"{DATA_PATH} was not found. "
             "Place NYC_Preprocessed.csv beside this script."
@@ -113,6 +122,7 @@ def build_feature_store():
     conn = create_database()
     required_columns = FEATURE_COLUMNS + [TARGET]
     total_rows = 0
+    logger.info("Building feature store from %s", DATA_PATH)
 
     for chunk in pd.read_csv(DATA_PATH, chunksize=CHUNK_SIZE):
         missing = [
@@ -122,6 +132,7 @@ def build_feature_store():
 
         if missing:
             conn.close()
+            logger.error("Missing required columns: %s", missing)
             raise ValueError(f"Missing columns: {missing}")
 
         # Keep only features needed by the model.
@@ -154,6 +165,8 @@ def build_feature_store():
     conn.commit()
     conn.close()
 
+    logger.info("Feature store created: %s", DB_PATH)
+    logger.info("Rows stored: %d; features stored: %d; target: %s", total_rows, len(FEATURE_COLUMNS), TARGET)
     print(f"Feature store created: {DB_PATH}")
     print(f"Rows stored: {total_rows}")
     print(f"Features stored: {len(FEATURE_COLUMNS)}")
@@ -161,4 +174,8 @@ def build_feature_store():
 
 
 if __name__ == "__main__":
-    build_feature_store()
+    try:
+        build_feature_store()
+    except Exception:
+        logger.exception("Feature-store build failed")
+        raise

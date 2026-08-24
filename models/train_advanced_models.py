@@ -6,6 +6,7 @@ Saves model pickle files and hyperparameter search tuning object.
 from pathlib import Path
 import sqlite3
 import warnings
+import logging
 
 import joblib
 import pandas as pd
@@ -19,6 +20,11 @@ except ImportError as exc:
     raise ImportError("Install XGBoost with: pip install xgboost") from exc
 
 warnings.filterwarnings("ignore")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DB_PATH = PROJECT_ROOT / "feature_store" / "feature_store.db"
@@ -47,6 +53,7 @@ TARGET = "trip_duration"
 def load_features_from_store():
     """Load model features and target from SQLite."""
     if not DB_PATH.exists():
+        logger.error("Feature store not found: %s", DB_PATH)
         raise FileNotFoundError(
             "feature_store.db was not found. Run build_features.py first."
         )
@@ -57,6 +64,7 @@ def load_features_from_store():
     with sqlite3.connect(DB_PATH) as conn:
         data = pd.read_sql_query(query, conn)
 
+    logger.info("Loaded %d rows for tree-based models", len(data))
     return data[FEATURE_COLUMNS], data[TARGET]
 
 
@@ -69,6 +77,7 @@ def compute_metrics(y_true, predictions):
 
 
 def main():
+    logger.info("Starting Random Forest and XGBoost training")
     X, y = load_features_from_store()
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=TEST_SIZE, random_state=RANDOM_STATE
@@ -86,6 +95,7 @@ def main():
         n_jobs=-1,
     )
     rf_model.fit(X_train, y_train)
+    logger.info("Random Forest training completed")
     rf_preds = rf_model.predict(X_test)
     rf_scores = compute_metrics(y_test, rf_preds)
     print(f"Random Forest: MAE={rf_scores['MAE']:.4f}, RMSE={rf_scores['RMSE']:.4f}, R2={rf_scores['R2']:.4f}")
@@ -99,6 +109,7 @@ def main():
         },
         "random_forest.pkl",
     )
+    logger.info("Saved random_forest.pkl")
     print("Saved: random_forest.pkl")
 
     # ---------------------------------------------------------------
@@ -116,6 +127,7 @@ def main():
         n_jobs=-1,
     )
     xgb_model.fit(X_train, y_train)
+    logger.info("Baseline XGBoost training completed")
     xgb_preds = xgb_model.predict(X_test)
     xgb_scores = compute_metrics(y_test, xgb_preds)
     print(f"XGBoost: MAE={xgb_scores['MAE']:.4f}, RMSE={xgb_scores['RMSE']:.4f}, R2={xgb_scores['R2']:.4f}")
@@ -129,6 +141,7 @@ def main():
         },
         "xgboost.pkl",
     )
+    logger.info("Saved xgboost.pkl")
     print("Saved: xgboost.pkl")
 
     # ---------------------------------------------------------------
@@ -164,6 +177,7 @@ def main():
         verbose=1,
     )
     search.fit(X_tune, y_tune)
+    logger.info("XGBoost hyperparameter search completed")
 
     # Save RandomizedSearchCV search object
     joblib.dump(search, "xgboost_tuning_search.pkl")
@@ -179,6 +193,7 @@ def main():
         n_jobs=-1,
     )
     tuned_model.fit(X_train, y_train)
+    logger.info("Tuned XGBoost training completed")
     tuned_preds = tuned_model.predict(X_test)
     tuned_scores = compute_metrics(y_test, tuned_preds)
 
@@ -193,8 +208,13 @@ def main():
         },
         "tuned_xgboost.pkl",
     )
+    logger.info("Saved tuned_xgboost.pkl")
     print("Saved: tuned_xgboost.pkl\n")
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception:
+        logger.exception("Advanced model-training pipeline failed")
+        raise

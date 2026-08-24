@@ -7,6 +7,7 @@ from pathlib import Path
 import sqlite3
 import sys
 import warnings
+import logging
 
 import joblib
 import numpy as np
@@ -24,6 +25,11 @@ from mlflow_tracker import MLflowTracker
 
 
 warnings.filterwarnings("ignore")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 DB_PATH = PROJECT_ROOT / "feature_store" / "feature_store.db"
 RANDOM_STATE = 42
@@ -48,6 +54,7 @@ TARGET = "trip_duration"
 
 def load_features_from_store():
     if not DB_PATH.exists():
+        logger.error("Feature store not found: %s", DB_PATH)
         raise FileNotFoundError("feature_store.db was not found.")
 
     columns = ", ".join(FEATURE_COLUMNS + [TARGET])
@@ -56,11 +63,13 @@ def load_features_from_store():
     with sqlite3.connect(DB_PATH) as conn:
         data = pd.read_sql_query(query, conn)
 
+    logger.info("Loaded %d rows for linear regression", len(data))
     return data[FEATURE_COLUMNS], data[TARGET]
 
 
 def main():
     tracker = MLflowTracker()
+    logger.info("Starting Linear Regression training")
 
     print("Loading data for Linear Regression...")
     X, y = load_features_from_store()
@@ -72,6 +81,7 @@ def main():
     print("Training Linear Regression...")
     linear_model = LinearRegression()
     linear_model.fit(X_train, y_train)
+    logger.info("Linear Regression training completed")
 
     predictions = linear_model.predict(X_test)
     metrics = {
@@ -83,6 +93,7 @@ def main():
     params = {"model_type": "LinearRegression", "test_size": TEST_SIZE, "random_state": RANDOM_STATE}
 
     joblib.dump(linear_model, "linear_regression_model.pkl")
+    logger.info("Saved linear_regression_model.pkl")
     print("Saved: linear_regression_model.pkl")
 
     tracker.log_run(
@@ -94,6 +105,7 @@ def main():
         artifacts=["linear_regression_model.pkl"],
     )
     print("Logged run to MLflow.")
+    logger.info("Logged Linear Regression run to MLflow")
 
     output_data = {
         "model": linear_model,
@@ -105,8 +117,12 @@ def main():
     }
 
     joblib.dump(output_data, "linear_regression.pkl")
+    logger.info("Saved linear_regression.pkl")
     print("Saved: linear_regression.pkl\n")
-    
+
 if __name__ == "__main__":
-    main()
- 
+    try:
+        main()
+    except Exception:
+        logger.exception("Linear Regression pipeline failed")
+        raise
