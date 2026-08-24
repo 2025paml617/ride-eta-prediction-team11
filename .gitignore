@@ -226,3 +226,11 @@ __marimo__/
 /feature_importance.csv
 /model_comparison.csv
 /top_1000_prediction_errors.csv
+
+.idea/
+Microsoft/
+mlruns/
+mlflow.db
+feature_store/
+data/processed/*.csv
+*.pkl
