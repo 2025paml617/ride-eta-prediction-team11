@@ -8,3 +8,5 @@ seaborn
 mlflow
 xgboost
 dvc
+pytest
+pytest-playwright

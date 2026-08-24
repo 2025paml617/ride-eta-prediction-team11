@@ -157,6 +157,46 @@ docker compose down
 The image contains only the serving code, dependencies, and selected model.
 Training data and the DVC cache are excluded through `.dockerignore`.
 
+## Testing and Playwright mode
+
+Run the local API contract tests from the repository root without Docker or a
+trained model:
+
+```powershell
+pytest -m "not e2e"
+```
+
+The browser smoke test uses Playwright and checks that the FastAPI Swagger UI
+loads from a running service. Install the browser once:
+
+```powershell
+playwright install chromium
+```
+
+Start the API in one terminal:
+
+```powershell
+docker compose up --build -d
+```
+
+Run the Playwright test in another terminal:
+
+```powershell
+pytest -m e2e --browser chromium --base-url http://127.0.0.1:8000
+```
+
+If the API is not running, the browser test is reported as skipped with the
+Docker startup command rather than as an unexplained connection failure.
+
+Run the complete suite with:
+
+```powershell
+pytest
+```
+
+The `e2e` marker keeps browser tests separate from fast unit/API tests. Stop
+the deployment after testing with `docker compose down`.
+
 ## Exploration and MLflow
 
 Run exploratory analysis independently:
