@@ -5,3 +5,5 @@ matplotlib
 fastapi[standard]
 scikit-learn
 seaborn
+mlflow
+xgboost
