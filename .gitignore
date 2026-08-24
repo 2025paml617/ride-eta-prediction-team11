@@ -234,3 +234,10 @@ mlflow.db
 feature_store/
 data/processed/*.csv
 *.pkl
+
+data/processed/.gitignore
+data/raw/NYC.csv
+data/raw/NYC_Preprocessed.csv
+models/feature_importance.csv
+models/model_comparison.csv
+models/top_1000_prediction_errors.csv
