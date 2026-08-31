@@ -288,7 +288,8 @@ print(processed_df.describe())
 # Save CSV
 # ============================================================
 
-OUTPUT_FILE = PROJECT_ROOT / "data" / "raw" /"NYC_Preprocessed.csv"
+OUTPUT_FILE = PROJECT_ROOT / "data" / "processed" / "NYC_Preprocessed.csv"
+OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
 
 processed_df.to_csv(
     OUTPUT_FILE,

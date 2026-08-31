@@ -216,3 +216,28 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+/linear_regression.pkl
+/linear_regression_model.pkl
+/random_forest.pkl
+/xgboost.pkl
+/tuned_xgboost.pkl
+/xgboost_tuning_search.pkl
+/best_model.pkl
+/feature_importance.csv
+/model_comparison.csv
+/top_1000_prediction_errors.csv
+
+.idea/
+Microsoft/
+mlruns/
+mlflow.db
+feature_store/
+data/processed/*.csv
+*.pkl
+
+data/processed/.gitignore
+data/raw/NYC.csv
+data/raw/NYC_Preprocessed.csv
+models/feature_importance.csv
+models/model_comparison.csv
+models/top_1000_prediction_errors.csv

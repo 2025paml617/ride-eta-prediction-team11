@@ -1,0 +1,29 @@
+{
+  "version": "2026-08-31-weather-enriched-v1",
+  "created_at": "2026-08-31",
+  "files": {
+    "data/raw/NYC.csv": {
+      "bytes": 200589097,
+      "md5": "e59c291a4b1c640f1dab33b89daa22e1",
+      "sha256": "fc8c777a4ab99a362d8b6b6f2038ff8a2c4625b9593248a47352d0d26fa99927",
+      "schema": [
+        "id", "vendor_id", "pickup_datetime", "dropoff_datetime",
+        "passenger_count", "pickup_longitude", "pickup_latitude",
+        "dropoff_longitude", "dropoff_latitude", "store_and_fwd_flag",
+        "trip_duration"
+      ]
+    },
+    "data/raw/weather.csv": {
+      "bytes": 1302472,
+      "md5": "405d9330ab588e38f4d168af1fd6f075",
+      "sha256": "1e14a94d68251b9d19f24aac0b0a33cd69a285253ba656cb155995b217b0a2c0",
+      "schema": [
+        "pickup_datetime", "tempm", "tempi", "dewptm", "dewpti", "hum",
+        "wspdm", "wspdi", "wgustm", "wgusti", "wdird", "wdire", "vism",
+        "visi", "pressurem", "pressurei", "windchillm", "windchilli",
+        "heatindexm", "heatindexi", "precipm", "precipi", "conds", "icon",
+        "fog", "rain", "snow", "hail", "thunder", "tornado"
+      ]
+    }
+  }
+}
