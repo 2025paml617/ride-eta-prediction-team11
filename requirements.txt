@@ -1,0 +1,12 @@
+streamlit
+pandas
+numpy
+matplotlib
+fastapi[standard]
+scikit-learn
+seaborn
+mlflow
+xgboost
+dvc
+pytest
+pytest-playwright

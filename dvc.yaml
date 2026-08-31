@@ -1,0 +1,52 @@
+stages:
+  preprocess:
+    cmd: python preprocessing/preprocessing.py
+    deps:
+      - preprocessing/preprocessing.py
+      - data/raw/NYC.csv
+    outs:
+      - data/processed/NYC_Preprocessed.csv
+
+  feature_store:
+    cmd: python features/build_features.py
+    deps:
+      - features/build_features.py
+      - data/processed/NYC_Preprocessed.csv
+    outs:
+      - feature_store/feature_store.db
+
+  train_linear:
+    cmd: python models/train_linear_regression.py
+    deps:
+      - models/train_linear_regression.py
+      - models/mlflow_tracker.py
+      - feature_store/feature_store.db
+    outs:
+      - linear_regression.pkl
+      - linear_regression_model.pkl
+
+  train_advanced:
+    cmd: python models/train_advanced_models.py
+    deps:
+      - models/train_advanced_models.py
+      - feature_store/feature_store.db
+    outs:
+      - random_forest.pkl
+      - xgboost.pkl
+      - tuned_xgboost.pkl
+      - xgboost_tuning_search.pkl
+
+  select_model:
+    cmd: python models/evaluate_and_select_best.py
+    deps:
+      - models/evaluate_and_select_best.py
+      - models/mlflow_tracker.py
+      - linear_regression.pkl
+      - random_forest.pkl
+      - xgboost.pkl
+      - tuned_xgboost.pkl
+    outs:
+      - best_model.pkl
+      - feature_importance.csv
+      - model_comparison.csv
+      - top_1000_prediction_errors.csv
