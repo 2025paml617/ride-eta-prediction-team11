@@ -7,124 +7,152 @@ stages:
       hash: md5
       md5: e59c291a4b1c640f1dab33b89daa22e1
       size: 200589097
+    - path: data/raw/weather.csv
+      hash: md5
+      md5: 405d9330ab588e38f4d168af1fd6f075
+      size: 1302472
     - path: preprocessing/preprocessing.py
       hash: md5
-      md5: 4955589ed94fc4307fc24f5abb99e8cd
-      size: 7998
+      md5: 6a0f63eecb5e46b273115b1b1ef7c628
+      size: 10714
     outs:
     - path: data/processed/NYC_Preprocessed.csv
       hash: md5
-      md5: 06cfe66995c75afad9cd03817ac21337
-      size: 204058985
+      md5: 222703e08b84dee72015e678a9a75c84
+      size: 317319120
+    - path: data/processed/validation_report.json
+      hash: md5
+      md5: 32924c0c5c5c9792df0f2ee344deacbb
+      size: 246
   feature_store:
     cmd: python features/build_features.py
     deps:
     - path: data/processed/NYC_Preprocessed.csv
       hash: md5
-      md5: 06cfe66995c75afad9cd03817ac21337
-      size: 204058985
+      md5: 222703e08b84dee72015e678a9a75c84
+      size: 317319120
     - path: features/build_features.py
       hash: md5
-      md5: 717cdfd48b96f200e1ac1980e163a25f
-      size: 5423
+      md5: 5adfa76f83aee0e653f9a5784690b046
+      size: 6191
     outs:
     - path: feature_store/feature_store.db
       hash: md5
-      md5: 5a79586482de4d11c2507429a616373e
-      size: 126279680
+      md5: 336913bfa0a7b63e26dc50d1c3339e7c
+      size: 181825536
   train_linear:
     cmd: python models/train_linear_regression.py
     deps:
     - path: feature_store/feature_store.db
       hash: md5
-      md5: 5a79586482de4d11c2507429a616373e
-      size: 126279680
+      md5: 336913bfa0a7b63e26dc50d1c3339e7c
+      size: 181825536
     - path: models/mlflow_tracker.py
       hash: md5
       md5: 00a402d3c98ab4fa9b35acc25d669307
       size: 2615
     - path: models/train_linear_regression.py
       hash: md5
-      md5: 07676f259814383e11a1a69862671287
-      size: 3728
+      md5: 07046171e73602799a81f9af86137938
+      size: 3870
     outs:
     - path: linear_regression.pkl
       hash: md5
-      md5: 241ecfec7ead79d2e9d2060812c21d32
-      size: 32771388
+      md5: 0253f882615fcb4074d9f714fc10cd07
+      size: 41872404
     - path: linear_regression_model.pkl
       hash: md5
-      md5: a373109cb21cb3e5ed102c0d12fd1551
-      size: 1303
+      md5: 37e4cfca6f3b5b206ae958fad0ae8279
+      size: 1503
   train_advanced:
     cmd: python models/train_advanced_models.py
     deps:
     - path: feature_store/feature_store.db
       hash: md5
-      md5: 5a79586482de4d11c2507429a616373e
-      size: 126279680
+      md5: 336913bfa0a7b63e26dc50d1c3339e7c
+      size: 181825536
     - path: models/train_advanced_models.py
       hash: md5
-      md5: 1b81ef252da2470823191eec8c7e87d4
-      size: 6909
+      md5: a3d263823baf1c4191f319087b3f181f
+      size: 7051
     outs:
     - path: random_forest.pkl
       hash: md5
-      md5: 8457d1d1a21eee4e12e1b714fa8b999d
-      size: 2063415162
+      md5: 48eb4dd8b2c7e1bf74b22b598cfb05e4
+      size: 1898097746
     - path: tuned_xgboost.pkl
       hash: md5
-      md5: 6eaa6de35e80c74506ddaa7195e5f08a
-      size: 3386670
+      md5: 8f9bf0368c28822b72e17c3fa3c517c9
+      size: 3368298
     - path: xgboost.pkl
       hash: md5
-      md5: 9d47376d9098d20b0fc65d30452e3425
-      size: 6066206
+      md5: 0a5808835b5b799b49506d7b120950cb
+      size: 5752298
     - path: xgboost_tuning_search.pkl
       hash: md5
-      md5: 4db86e25b97b7b07dd35eaa5e7a1a988
-      size: 2418560
+      md5: fa75c38dcd269e6f7d80448aba41d990
+      size: 2362432
   select_model:
     cmd: python models/evaluate_and_select_best.py
     deps:
     - path: linear_regression.pkl
       hash: md5
-      md5: 241ecfec7ead79d2e9d2060812c21d32
-      size: 32771388
+      md5: 0253f882615fcb4074d9f714fc10cd07
+      size: 41872404
     - path: models/evaluate_and_select_best.py
       hash: md5
-      md5: c0fb6d44c2a72cd7ea9f4209e3e42ebb
-      size: 3992
+      md5: c327e72e6e4a965c3de1de983ade1a64
+      size: 4134
     - path: models/mlflow_tracker.py
       hash: md5
       md5: 00a402d3c98ab4fa9b35acc25d669307
       size: 2615
     - path: random_forest.pkl
       hash: md5
-      md5: 8457d1d1a21eee4e12e1b714fa8b999d
-      size: 2063415162
+      md5: 48eb4dd8b2c7e1bf74b22b598cfb05e4
+      size: 1898097746
     - path: tuned_xgboost.pkl
       hash: md5
-      md5: 6eaa6de35e80c74506ddaa7195e5f08a
-      size: 3386670
+      md5: 8f9bf0368c28822b72e17c3fa3c517c9
+      size: 3368298
     - path: xgboost.pkl
       hash: md5
-      md5: 9d47376d9098d20b0fc65d30452e3425
-      size: 6066206
+      md5: 0a5808835b5b799b49506d7b120950cb
+      size: 5752298
     outs:
     - path: best_model.pkl
       hash: md5
-      md5: feb9f4749736927144dbb4a85be2d7fb
-      size: 5155640
+      md5: 80f61e79e80d70f0a1b2a42f76186253
+      size: 2457761
     - path: feature_importance.csv
       hash: md5
-      md5: 6d30f225d50a8dd85b559c7286b8c0d7
-      size: 401
+      md5: d2967bf80a2f25370b5275feeac64853
+      size: 579
     - path: model_comparison.csv
       hash: md5
-      md5: e1fe0b94ba9f8117bcf2cc91bec2ffe2
-      size: 303
+      md5: 98307f18e4b90733579a57b548798a0d
+      size: 301
     - path: top_1000_prediction_errors.csv
       hash: md5
-      md5: a981174390f290cbdb1054e08aa9862e
-      size: 223761
+      md5: 7f89f9e4ff2fc1ba3f4e43ffceab5b63
+      size: 322206
+  simulate_drift:
+    cmd: python monitoring/drift_simulation.py
+    deps:
+    - path: data/processed/NYC_Preprocessed.csv
+      hash: md5
+      md5: 222703e08b84dee72015e678a9a75c84
+      size: 317319120
+    - path: monitoring/drift_simulation.py
+      hash: md5
+      md5: 5db1a7f2e3f142f049f679898a8d2e40
+      size: 5842
+    outs:
+    - path: monitoring/drift_metrics.csv
+      hash: md5
+      md5: 501fde6aeead0a263d3df6dd39dcd977
+      size: 788
+    - path: monitoring/drift_report.json
+      hash: md5
+      md5: 06781e2a3060f47127b7e0d596fa3baf
+      size: 371

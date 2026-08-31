@@ -25,7 +25,32 @@ venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
 
-The input file must be available at `data/raw/NYC.csv`.
+### Prepare the taxi dataset
+
+The repository stores the taxi input as `NYC Taxi Trip Duration.zip`. From the
+repository root, extract it directly into `data/raw`; the archive contains
+`NYC.csv` and will create `data/raw/NYC.csv`:
+
+```powershell
+Expand-Archive `
+  -LiteralPath "data/raw/NYC Taxi Trip Duration.zip" `
+  -DestinationPath "data/raw" `
+  -Force
+
+Test-Path "data/raw/NYC.csv"
+```
+
+The final command should return `True`. The input file must be available at
+`data/raw/NYC.csv`. The optional
+`data/raw/weather.csv` file can add hourly weather features. It must contain
+`weather_datetime` and may contain `temperature_c`, `precipitation_mm`,
+`wind_speed_kmh`, and `visibility_km`.
+
+Immediately after ingestion, the pipeline validates required columns, parses
+pickup/dropoff timestamps, rejects missing GPS pings and impossible coordinates,
+rejects negative or chronologically invalid trips, and writes an auditable
+`data/processed/validation_report.json`. Weather observations are left-joined
+to pickup time rounded to the hour; missing weather values are median-imputed.
 
 ## Option A: manual training
 
@@ -220,6 +245,18 @@ Feature-store creation, training, evaluation, model selection, MLflow tracking,
 and API inference emit standard Python logger messages at `INFO` level.
 Unexpected failures are logged at `ERROR` level with a traceback before being
 re-raised. The log format includes a timestamp, severity, module, and message.
+
+## Drift simulation and retraining trigger
+
+Run the reproducible drift simulation with:
+
+```powershell
+python monitoring/drift_simulation.py
+```
+
+The simulation writes PSI metrics and a retraining decision to `monitoring/`.
+Any monitored feature with PSI at least `0.20` triggers the documented
+retraining workflow in [`monitoring/README.md`](monitoring/README.md).
 
 ## License
 

@@ -25,6 +25,11 @@ FEATURE_COLUMNS = [
     "num__pickup_weekday",
     "num__rush_hour",
     "num__is_weekend",
+    "num__temperature_c",
+    "num__precipitation_mm",
+    "num__wind_speed_kmh",
+    "num__visibility_km",
+    "num__weather_data_available",
     "cat__vendor_id_1",
     "cat__vendor_id_2",
     "cat__store_and_fwd_flag_N",
@@ -43,6 +48,10 @@ class PredictionRequest(BaseModel):
     pickup_weekday: int = Field(ge=0, le=6)
     rush_hour: int = Field(ge=0, le=1)
     is_weekend: int = Field(ge=0, le=1)
+    temperature_c: float | None = None
+    precipitation_mm: float | None = Field(default=None, ge=0)
+    wind_speed_kmh: float | None = Field(default=None, ge=0)
+    visibility_km: float | None = Field(default=None, ge=0)
     vendor_id: int = Field(ge=1, le=2)
     store_and_fwd_flag: str = Field(pattern="^[NY]$")
 
@@ -85,6 +94,16 @@ def predict(request: PredictionRequest):
         "num__pickup_weekday": request.pickup_weekday,
         "num__rush_hour": request.rush_hour,
         "num__is_weekend": request.is_weekend,
+        "num__temperature_c": request.temperature_c,
+        "num__precipitation_mm": request.precipitation_mm,
+        "num__wind_speed_kmh": request.wind_speed_kmh,
+        "num__visibility_km": request.visibility_km,
+        "num__weather_data_available": int(
+            request.temperature_c is not None
+            or request.precipitation_mm is not None
+            or request.wind_speed_kmh is not None
+            or request.visibility_km is not None
+        ),
         "cat__vendor_id_1": vendor_1,
         "cat__vendor_id_2": vendor_2,
         "cat__store_and_fwd_flag_N": flag_n,

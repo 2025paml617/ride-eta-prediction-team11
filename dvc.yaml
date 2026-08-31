@@ -4,8 +4,10 @@ stages:
     deps:
       - preprocessing/preprocessing.py
       - data/raw/NYC.csv
+      - data/raw/weather.csv
     outs:
       - data/processed/NYC_Preprocessed.csv
+      - data/processed/validation_report.json
 
   feature_store:
     cmd: python features/build_features.py
@@ -50,3 +52,12 @@ stages:
       - feature_importance.csv
       - model_comparison.csv
       - top_1000_prediction_errors.csv
+
+  simulate_drift:
+    cmd: python monitoring/drift_simulation.py
+    deps:
+      - monitoring/drift_simulation.py
+      - data/processed/NYC_Preprocessed.csv
+    outs:
+      - monitoring/drift_report.json
+      - monitoring/drift_metrics.csv

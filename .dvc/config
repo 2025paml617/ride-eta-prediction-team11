@@ -1,0 +1,6 @@
+[core]
+    remote = myremote
+['remote "myremote"']
+    url = s3://dvcversioning/dvc-cache
+    endpointurl = https://gateway.storjshare.io
+    region = us-east-1
